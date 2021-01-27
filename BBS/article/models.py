@@ -1,6 +1,10 @@
 from django.db import models
-from user.models import User as B_user
+from ..user.models import User as B_user
 # Create your models here.
+"""
+所有的外键on_delete值需要再仔细研究一下
+
+"""
 
 
 class Article(models.Model):
@@ -24,7 +28,7 @@ class Article(models.Model):
 
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='发表时间')
 
-    author = models.ForeignKey(B_user)
+    author = models.ForeignKey(B_user, on_delete=models.CASCADE)
 
     last_rank = models.IntegerField(null=True, verbose_name='上次排名')
 
@@ -36,9 +40,9 @@ class Article(models.Model):
 
 class Stars(models.Model):
 
-    visitor = models.ForeignKey(B_user)
+    visitor = models.ForeignKey(B_user, on_delete=models.CASCADE)
 
-    to_article = models.ForeignKey(Article)
+    to_article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
     up_time = models.DateTimeField(auto_now_add=True)
 
@@ -53,9 +57,9 @@ class Comments(models.Model):
 
     _parent = models.BooleanField(default=0, verbose_name='评论类型')
 
-    publisher = models.ForeignKey(B_user)
+    publisher = models.ForeignKey(B_user, on_delete=models.CASCADE)
 
-    to_log = models.ForeignKey(Article)
+    to_log = models.ForeignKey(Article, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'comments'
@@ -66,11 +70,11 @@ class Heat(models.Model):
 
     id = models.AutoField(max_length=99, primary_key=True)
 
-    article = models.ForeignKey(Article)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
     view_time = models.DateTimeField(auto_now_add=True, verbose_name='访问时间')
 
-    visitor = models.ForeignKey(B_user)
+    visitor = models.ForeignKey(B_user, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'heat'
