@@ -53,7 +53,7 @@ class User(models.Model):
 
 class Friends(models.Model):
 
-    master = models.ForeignKey(User)
+    master = models.ForeignKey(User, on_delete=models.CASCADE)
 
     guest = models.IntegerField(null=False, verbose_name='关注用户的ID')
 

@@ -1,10 +1,6 @@
 from django.db import models
 from ..user.models import User as B_user
 # Create your models here.
-"""
-所有的外键on_delete值需要再仔细研究一下
-
-"""
 
 
 class Article(models.Model):
@@ -40,7 +36,7 @@ class Article(models.Model):
 
 class Stars(models.Model):
 
-    visitor = models.ForeignKey(B_user, on_delete=models.CASCADE)
+    visitor = models.ForeignKey(B_user, on_delete=models.DO_NOTHING)
 
     to_article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
@@ -74,7 +70,7 @@ class Heat(models.Model):
 
     view_time = models.DateTimeField(auto_now_add=True, verbose_name='访问时间')
 
-    visitor = models.ForeignKey(B_user, on_delete=models.CASCADE)
+    visitor = models.ForeignKey(B_user, on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'heat'
