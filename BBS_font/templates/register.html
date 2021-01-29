@@ -17,25 +17,35 @@
         </div>
         <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
-                <form>
-                    <div class="form-group">
+                <form onsubmit="return false;">
+                    <div class="form-group" style="margin-bottom: 0;">
                       <label for="userName">用户名：</label>
                       <input type="text" class="form-control" id="userName" placeholder="8-12个字符，支持数字、字母和下划线">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label id="name-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400; display: none;">用户名不合法！</label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0; margin-top: 10px;">
                       <label for="password">密码：</label>
                       <input type="password" class="form-control" id="password" placeholder="8-12位，支持数字、字母和下划线">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label id="password-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400; display: none;">密码不合法！</label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0; margin-top: 10px;">
                         <label for="password">确认密码：</label>
-                        <input type="password" class="form-control" id="password" placeholder="再次输入密码">
-                      </div>
+                        <input type="password" class="form-control" id="passwordConfirm" placeholder="再次输入密码">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label id="password-confirm-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400; display: none;">两次密码不一致！</label>
+                    </div>
                     <div class="clearfix"></div>
-                    <button type="submit" class="btn btn-success btn-block" style="margin-top: 20px;">已有账号，返回登录</button>
-                    <button type="submit" class="btn btn-warning btn-block" style="margin-top: 20px;">注册账号</button>
+                    <a href="/user/token" type="submit" class="btn btn-success btn-block" style="margin-top: 20px;">已有账号，返回登录</a>
+                    <button type="submit" class="register btn btn-warning btn-block" style="margin-top: 20px;">注册账号</button>
                   </form>
             </div>
         </div>
     </div>
+    <script src="/static/js/register.js"></script>
 </body>
 </html>

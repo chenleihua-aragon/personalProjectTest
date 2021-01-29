@@ -1,10 +1,10 @@
 from . import views
-from django.conf.urls import url
+from django.urls import path
 
 
 urlpatterns = [
-    url(r'^userinfo/$', views.userinfo_view),
-    url(r'^token/$', views.login_view),
-    url(r'^newuser/$', views.register_view),
-    url(r'information/$', views.inform_view)
+    path('userinfo/', views.userinfo_view),
+    path('token/', views.login_view),
+    path('newuser/', views.register_view),
+    path('information/', views.inform_view)
 ]

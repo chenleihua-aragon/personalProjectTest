@@ -21,17 +21,17 @@ $(".up").on("click", function(){
 
 //  评论点赞，点赞后按钮颜色改变
 $(".comment-up").on("click", function(){
-    $(this).removeClass("btn-success");
-    $(this).addClass("btn-primary");
-    $(this).siblings(".badge").css("background-color", "red");
+//    $(this).removeClass("btn-success");
+//    $(this).addClass("btn-primary");
+    $(this).children(".badge").css("background-color", "red");
 })
 
 
 //  评论点踩，颜色改变
 $(".comment-down").on("click", function(){
-    $(this).removeClass("btn-danger");
-    $(this).addClass("btn-primary");
-    $(this).siblings(".badge").css("background-color", "red");
+//    $(this).removeClass("btn-danger");
+//    $(this).addClass("btn-primary");
+    $(this).children(".badge").css("background-color", "red");
 })
 
 //  回复点赞，颜色改变
