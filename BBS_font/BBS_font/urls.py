@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('article/', include('article.urls')),
     path('user/', include('user.urls')),
-    path('result/', views.search_view)
+    path('result/', views.search_view, name='search_result')
 ]

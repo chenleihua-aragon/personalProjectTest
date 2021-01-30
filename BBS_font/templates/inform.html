@@ -19,19 +19,19 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/article">海角论坛</a>
+                <a class="navbar-brand" href="{% url 'index' %}">海角论坛</a>
             </div>
       
           <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="/article" class="active">论坛</a></li>
-                    <li><a href="/article/rank">海角榜</a></li>
-                    <li><a href="/article/newarticle"> <span class="glyphicon glyphicon-pencil"></span> 写一篇</a></li>
+                    <li><a href="{% url 'index' %}" class="active">论坛</a></li>
+                    <li><a href="{% url 'rank' %}">海角榜</a></li>
+                    <li><a href="{% url 'new_article' %}"> <span class="glyphicon glyphicon-pencil"></span> 写一篇</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <!-- <li><a href="#">登录</a></li>
-                    <li><a href="#">注册</a></li> -->
+                    <!-- <li><a href="{% url 'login' %}">登录</a></li>
+                    <li><a href="{% url 'register' %}">注册</a></li> -->
 
                     <li ><a href="#" class="welcome text-right" style="border: 0px solid red; padding-right: 0;">欢迎，</a></li>
                     <li><a href="#" class="userName text-left" style="border: 0px solid red; padding-left: 0;">酒神</a></li>
@@ -40,7 +40,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="#">个人中心</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#inform_opinion">意见反馈</a></li>
-                            <li><a href="/user/information">消息通知 <span class="badge" style="background-color: red;"> 15 </span> </a></li>
+                            <li><a href="{% url 'inform' %}">消息通知 <span class="badge" style="background-color: red;"> 15 </span> </a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#">退出</a></li>
                         </ul>
