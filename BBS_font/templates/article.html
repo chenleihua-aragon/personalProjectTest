@@ -58,12 +58,12 @@
                   <a href="{% url 'search_result' %}" type="submit" class="btn btn-default">搜索</a>
                 </form>
                 <ul class="nav navbar-nav navbar-left">
-                    <li><a href="{% url ''new_article %}"> <span class="glyphicon glyphicon-pencil"></span> 写一篇</a></li>
+                    <li><a href="{% url 'new_article' %}"> <span class="glyphicon glyphicon-pencil"></span> 写一篇</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
                     <li><p class="navbar-text">欢迎，<strong>酒神</strong></p></li>
-<!--                    <li><a href="{% url 'lodgin' %}">登录</a></li>-->
+<!--                    <li><a href="{% url 'login' %}">登录</a></li>-->
 <!--                    <li><a href="{% url 'register' %}">注册</a></li>-->
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户中心  <span class="badge" style="background-color: red;"> 15 </span> <span class="caret"></span></a>
@@ -110,7 +110,7 @@
                         </p>
                     </div>
                     <div class="panel-footer clearfix">
-                        <div class="col-sm-3 col-sm-offset-1">
+                        <div class="col-sm-3 col-xs-6 col-sm-offset-1">
                             <small>发布时间：2020-12-20 12:25:32</small>
                         </div>
                         <div class="col-sm-2 col-sm-offset-5">
@@ -362,7 +362,7 @@
         </div>
         <div class="container">
             <div class="row" style="margin-top: 10px; ">
-                <a href="{% url 'userinfo %}">
+                <a href="{% url 'userinfo' %}">
                     <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
                         <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
                     </div>
@@ -830,5 +830,5 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <script src="/static/js/user_info.js"></script>
+    <script src="/static/js/article_detail.js"></script>
 </body>

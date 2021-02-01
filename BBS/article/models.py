@@ -1,6 +1,7 @@
 from django.db import models
-from ..user.models import User as B_user
+
 # Create your models here.
+from BBS.user.models import User
 
 
 class Article(models.Model):
@@ -24,7 +25,7 @@ class Article(models.Model):
 
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='发表时间')
 
-    author = models.ForeignKey(B_user, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     last_rank = models.IntegerField(null=True, verbose_name='上次排名')
 
@@ -36,7 +37,7 @@ class Article(models.Model):
 
 class Stars(models.Model):
 
-    visitor = models.ForeignKey(B_user, on_delete=models.DO_NOTHING)
+    visitor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     to_article = models.ForeignKey(Article, on_delete=models.CASCADE)
 
@@ -53,7 +54,7 @@ class Comments(models.Model):
 
     _parent = models.BooleanField(default=0, verbose_name='评论类型')
 
-    publisher = models.ForeignKey(B_user, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(User, on_delete=models.CASCADE)
 
     to_log = models.ForeignKey(Article, on_delete=models.CASCADE)
 
@@ -70,7 +71,7 @@ class Heat(models.Model):
 
     view_time = models.DateTimeField(auto_now_add=True, verbose_name='访问时间')
 
-    visitor = models.ForeignKey(B_user, on_delete=models.DO_NOTHING)
+    visitor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     class Meta:
         db_table = 'heat'

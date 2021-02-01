@@ -35,13 +35,13 @@ class User(models.Model):
 
     last_literature = models.IntegerField(default=0, verbose_name='上次访问时公开文学类ID')
 
-    inform_comment = models.DateTimeField(default='', verbose_name='上次查看评论我的时间')
+    inform_comment = models.DateTimeField( verbose_name='上次查看评论我的时间')
 
-    inform_reply = models.DateTimeField(default='', verbose_name='上次查看回复我的时间')
+    inform_reply = models.DateTimeField( verbose_name='上次查看回复我的时间')
 
-    inform_up = models.DateTimeField(default='', verbose_name='上次查看点赞我的时间')
+    inform_up = models.DateTimeField(verbose_name='上次查看点赞我的时间')
 
-    inform_follow = models.DateTimeField(default='', verbose_name='上次查看关注我的时间')
+    inform_follow = models.DateTimeField(verbose_name='上次查看关注我的时间')
 
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='账户创建时间')
 
