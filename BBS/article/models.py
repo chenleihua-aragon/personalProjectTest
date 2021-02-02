@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from BBS.user.models import User
+from user.models import User
 
 
 class Article(models.Model):
@@ -60,7 +60,6 @@ class Comments(models.Model):
 
     class Meta:
         db_table = 'comments'
-        ordering = ['-created_time']
 
 
 class Heat(models.Model):
@@ -75,3 +74,17 @@ class Heat(models.Model):
 
     class Meta:
         db_table = 'heat'
+
+
+class CommentStars(models.Model):
+
+    visitor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+
+    to_comment = models.ForeignKey(Comments, on_delete=models.CASCADE)
+
+
+class CommentDowns(models.Model):
+
+    visitor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+
+    to_comment = models.ForeignKey(Comments, on_delete=models.CASCADE)

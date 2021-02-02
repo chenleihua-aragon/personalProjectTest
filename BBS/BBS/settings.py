@@ -81,7 +81,8 @@ DATABASES = {
         'NAME': 'BBS',
         'PASSWORD': 'clh673462',
         'PORT': 3306,
-        'HOST': '127.0.0.1'
+        'HOST': '127.0.0.1',
+        'USER': 'root',
     }
 }
 

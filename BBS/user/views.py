@@ -1,8 +1,15 @@
 import hashlib
 from django.http import JsonResponse
-from .. import jwt_test
 import json
+import jwt_test
 from .models import *
+import datetime
+
+"""
+time = datetime.datetime.now()
+再把time赋值给需要的DatetimeField字段即可
+"""
+
 # Create your views here.
 
 
