@@ -18,4 +18,5 @@ $().ready(function(){
 $(".article-detail").on("click", function(){
     var id=$(this).attr("id");
     window.localStorage.setItem("article-detail", id);
+    window.location.href="/article/detail";
 })

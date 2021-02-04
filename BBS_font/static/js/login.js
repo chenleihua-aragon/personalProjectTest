@@ -67,7 +67,7 @@ login_page.submit={
     },
 
     login:function(data){
-        var data=serializeForm("login-form");
+        var data=getFormData("login-form");
         jQuery.ajax({
             type:"POST",
             url:"http://127.0.0.1:8000/user/token",
@@ -75,7 +75,7 @@ login_page.submit={
             data:JSON.stringify(data),
             async:"true",
             success:function(response){
-                if(response.code==200){
+                if(response.code==100){
                     token=response.data.token;
                     name=response.username;
                     sign=response.sign;

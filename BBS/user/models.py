@@ -55,6 +55,6 @@ class Friends(models.Model):
 
     master = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    guest = models.IntegerField(null=False, verbose_name='关注用户的ID')
+    guest = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='关注的用户')
 
     as_friend_at = models.DateTimeField(auto_now_add=True, verbose_name="添加好友时间")

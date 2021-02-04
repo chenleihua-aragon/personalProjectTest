@@ -37,9 +37,9 @@
                 <ul class="nav navbar-nav navbar-left">
                     <li><a href="{% url 'new_article' %}"> <span class="glyphicon glyphicon-pencil"></span> 写一篇</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'login' %}">登录</a></li>
-                    <li><a href="{% url 'register' %}">注册</a></li>
+                <ul class="nav navbar-nav navbar-right personal-part">
+                    <li class="beforeLogin"><a href="{% url 'login' %}">登录</a></li>
+                    <li class="beforeLogin"><a href="{% url 'register' %}">注册</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户中心 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -205,5 +205,6 @@
         </div><!-- /.modal-dialog -->
     </div>
     <script src="/static/js/search_result.js"></script>
+    <script src="/static/js/common.js"></script>
 </body>
 </html>

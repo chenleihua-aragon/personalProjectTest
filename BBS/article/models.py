@@ -82,9 +82,13 @@ class CommentStars(models.Model):
 
     to_comment = models.ForeignKey(Comments, on_delete=models.CASCADE)
 
+    at_time = models.DateTimeField(blank=True, null=True, verbose_name='评论点赞时间')
+
 
 class CommentDowns(models.Model):
 
     visitor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     to_comment = models.ForeignKey(Comments, on_delete=models.CASCADE)
+
+    at_time = models.DateTimeField(blank=True, null=True, verbose_name='评论点赞时间')

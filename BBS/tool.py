@@ -7,7 +7,7 @@ from user import models
 def auth(*methods):
     def wrapper(func):
         def login(request, *args, **kwargs):
-            token = request.META.get('HTTP_CXAUTHORIZATION')
+            token = request.META.get('HTTP_BBSAUTHORIZATION')
             if request.method not in methods:
                 return func(request, *args,  **kwargs)
             if not token or token == 'null':
