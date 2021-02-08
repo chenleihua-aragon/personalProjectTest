@@ -24,14 +24,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/article">海角论坛</a>
+                <a class="navbar-brand index" href="{% url 'index' 'news' %}">海角论坛</a>
             </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                  <li><a href="{% url 'index' %}" class="active">论坛</a></li>
-                  <li><a href="{% url 'rank' %}">海角榜</a></li>
+                  <li><a href="{% url 'index' 'news' %}" class="active index">论坛</a></li>
                 </ul>
                 <form class="navbar-form navbar-left">
                     <div class="form-group">
@@ -43,38 +42,31 @@
                     <li><a href="{% url 'new_article' %}"> <span class="glyphicon glyphicon-pencil"></span> 写一篇</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <!-- <li><a href="{% url 'login' %}">登录</a></li>
-                    <li><a href="{% url 'register' %}">注册</a></li> -->
-
-                    <li ><a href="#" class="welcome text-right" style="border: 0px solid red; padding-right: 0;">欢迎，</a></li>
-                    <li><a href="#" class="userName text-left" style="border: 0px solid red; padding-left: 0;">酒神</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户中心  <span class="badge" style="background-color: red;"> 15 </span> <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">个人中心</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#inform_opinion">意见反馈</a></li>
-                            <li><a href="{% url 'userinfo' %}">消息通知 <span class="badge" style="background-color: red;"> 15 </span> </a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">退出</a></li>
-                        </ul>
-                    </li>
+                   {% if request.session and request.session.user %}
+                    <li><p class="navbar-text text-left">欢迎，<strong>{{ request.session.user.user }}</strong></p></li>
+                    <li><a href="{% url 'out' %}">注销</a>
+                    {% else %}
+                    <li class="beforeLogin"><a href="{% url 'login' %}">登录</a></li>
+                    <li class="beforeLogin"><a href="{% url 'register' %}">注册</a></li>
+                    {% endif %}
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
 
     <div class="container">
-        <form class="form-horizontal">
+        <form class="form-horizontal" action="/article/1/newarticle" method="post">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="article-title" class="col-sm-2 control-label">文章标题：</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="article-title" placeholder="不超过16个字">
+                    <input type="text" class="form-control" name="article-title" id="article-title" placeholder="不超过16个字" value="{{ article_title }}" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="article-type" class="col-sm-2 control-label">文章分类：</label>
                 <div class="col-sm-10">
-                    <select class="form-control" id="article-type">
+                    <select class="form-control" name="article-type" id="article-type" required>
                         <option value="">------------------------------------------------------------------------------------请选择文章分类------------------------------------------------------------------------------------</option>
                         <option value="news">-----------------------------------------------------------------------------------------新闻类-----------------------------------------------------------------------------------------</option>
                         <option value="sports">-----------------------------------------------------------------------------------------体育类-----------------------------------------------------------------------------------------</option>
@@ -84,43 +76,19 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="article-type" class="col-sm-2 control-label">文章分类：</label>
-                <div class="col-sm-10">
-                    <div class="radio-inline">
-                        <input type="radio" name="authority" value="0" checked> 私人
-                    </div>
-                    <div class="radio-inline">
-                        <input type="radio" name="authority" value="0"> 公开
-                    </div>
-                </div>
-            </div>
 
             <div class="form-group">
                 <label for="article-content" class="col-sm-2 control-label">文章内容：</label>
                 <div class="col-sm-10">
-                    <textarea name="article-content" id="article-content" cols="30" rows="10" style="resize: none;"></textarea>
-                    <script>
-                        KindEditor.ready(function(K) {
-                            window.editor1 = K.create('#article-content',
-                                                      {cssPath: '/static/kindeditor-4.1.12/plugins/code/prettify.css',
-                                                       allowFileManager: true,
-                                                       resizeType:1,
-                                                       width: '100%',
-                                                       uploadJson: '/upload_img/',
-                                                       fileManageJson: '/file_management/',
-                                                       allowImageRemote: true,
-                                                       allowImageUpload: true,
-                                                       allowFileManager: true,
-                                                       filePostName: 'article_file'
-                                                       });});
-                    </script>
+                    <textarea name="article-content" id="article-content" rows="15" style="resize: none; width: 100%;" required>{{ article_content }}</textarea>
                 </div>
                 <div class="col-sm-1 col-sm-offset-10" style="margin-top: 10px; ">
-                    <button class="btn btn-primary btn-sm">发表</button>
+                    <button type="submit" class="btn btn-primary btn-sm">发表</button>
                 </div>
             </div>
         </form>
+        <div class="alert alert-danger" role="alert">{{ publish_error }}</div>
     </div>
+    <script src="/static/js/common.js"></script>
 </body>
 </html>

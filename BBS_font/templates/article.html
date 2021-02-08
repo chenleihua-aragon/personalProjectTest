@@ -3,35 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文章详情</title>
+    <title>{{ article.title }}</title>
     <link rel="stylesheet" href="/static/bootstrap-3.4.1-dist/css/bootstrap.min.css">
     <script src="/static/jquery-3.5.1.min.js"></script>
     <script src="/static/bootstrap-3.4.1-dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class="modal fade" tabindex="-1" role="dialog" id="article_detail_opinion">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">意见反馈 <small>文章详情页</small> </h4>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="questionDescripe"> <span class="glyphicon glyphicon-star"></span> 问题描述 </label>
-                            <textarea class="form-control" rows="5" id="questionDescripe" style="resize: none;"></textarea>
-                        </div>
-                        <button class="btn btn-primary" style="width: 49.6%;">提交</button>
-                        <button class="btn btn-danger" style="width: 49.6%;">取消</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success btn-block">保存但不提交</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+
     <nav class="navbar navbar-default">
         <div class="container-fluid">
           <!-- Brand and toggle get grouped for better mobile display -->
@@ -42,14 +20,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{% url 'index' %}">海角论坛</a>
+                <a class="navbar-brand index" href="{% url 'index' 'news' %}">海角论坛</a>
             </div>
       
           <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                  <li><a href="{% url 'index' %}" class="active">论坛</a></li>
-                  <li><a href="{% url 'rank' %}">海角榜</a></li>
+                  <li><a href="{% url 'index' 'news' %}" class="active index">论坛</a></li>
                 </ul>
                 <form class="navbar-form navbar-left">
                   <div class="form-group">
@@ -62,19 +39,13 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><p class="navbar-text">欢迎，<strong>酒神</strong></p></li>
-<!--                    <li><a href="{% url 'login' %}">登录</a></li>-->
-<!--                    <li><a href="{% url 'register' %}">注册</a></li>-->
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">用户中心  <span class="badge" style="background-color: red;"> 15 </span> <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'userinfo' %}" target="_blank">个人中心</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#article_detail_opinion">意见反馈</a></li>
-                            <li><a href="{% url 'inform' %}">消息通知 <span class="badge" style="background-color: red;"> 15 </span> </a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">退出</a></li>
-                        </ul>
-                    </li>
+                    {% if request.session and request.session.user %}
+                    <li><p class="navbar-text text-left">欢迎，<strong>{{ request.session.user.user }}</strong></p></li>
+                    <li><a href="{% url 'out' %}">注销</a>
+                    {% else %}
+                    <li class="beforeLogin"><a href="{% url 'login' %}">登录</a></li>
+                    <li class="beforeLogin"><a href="{% url 'register' %}">注册</a></li>
+                    {% endif %}
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -85,39 +56,23 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="panel panel-success">
                     <div class="panel-heading">
-                        <h3 class="panel-title">文章标题</h3>
-                        <h5><a href="{% url 'userinfo' %}">作者</a></h5>
+                        <h3 class="panel-title">{{ article.title }}</h3>
+                        <h5><a href="{% url 'userinfo' article.author.name %}">{{ article.author.name }}</a></h5>
                     </div>
                     <div class="panel-body">
                         <p style="line-height: 180%; ">
-                            每一种字段都需要指定一些特定的参数（参考 模型字段 ）。 例如， CharField （以及它的子类）需要接收一个 max_length 参数，用以指定数据库存储 VARCHAR 数据时用的字节数。
-                        一些可选的参数是通用的，可以用于任何字段类型，详情请见 参考 ，下面介绍一部分经常用到的通用参数：
-                        null
-                        如果设置为 True，当该字段为空时，Django 会将数据库中该字段设置为 NULL。默认为 False 。
-                        blank
-                        如果设置为 True，该字段允许为空。默认为 False。
-                        注意该选项与``null`` 不同， null 选项仅仅是数据库层面的设置，然而 blank 是涉及表单验证方面。如果一个字段设置为 blank=True ，在进行表单验证时，接收的数据该字段值允许为空，而设置为 blank=False 时，不允许为空。
-                        choices
-                        一系列二元组，用作此字段的选项。如果提供了二元组，默认表单小部件是一个选择框，而不是标准文本字段，并将限制给出的选项。
-                        一个选项列表：
-                        YEAR_IN_SCHOOL_CHOICES = [
-                            ('FR', 'Freshman'),
-                            ('SO', 'Sophomore'),
-                            ('JR', 'Junior'),
-                            ('SR', 'Senior'),
-                            ('GR', 'Graduate'),
-                        ]
-                        注解
+                            {{ article.content }}
                         </p>
                     </div>
                     <div class="panel-footer clearfix">
-                        <div class="col-sm-3 col-xs-6 col-sm-offset-1">
-                            <small>发布时间：2020-12-20 12:25:32</small>
+                        <div class="col-sm-3 col-xs-6 text-right">
+                            <small>发表时间：{{ article.created_time }}</small>
                         </div>
-                        <div class="col-sm-2 col-sm-offset-5">
-                            <button class="btn btn-danger btn-xs up"> <span class="glyphicon glyphicon-heart"></span> 点赞 <span class="badge">2.5w</span></button>
-                            <button class="btn btn-primary btn-xs follow"> <span class="glyphicon glyphicon-plus"></span> 关注</button>
+                        {% if request.session.user.user == article.author.name %}
+                        <div class="col-sm-3 col-xs-6 col-sm-offset-3 text-right">
+                            <a href="/article/detail/{{ article.id }}/delete" type="button" class="btn btn-danger btn-xs"> 删除文章 </a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -132,298 +87,27 @@
                 </div>
             </div>
             <div class="row">
+                {% if request.session and request.session.user %}
                 <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                    <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 50px; height: 50px; border-radius: 100%;">
+                    <h5><strong id="username">{{ request.session.user.user }}</strong></h5>
                 </div>
-                <div class="col-sm-8">
-                    <textarea class="form-control" rows="3" style="resize: none;"></textarea>
+                <form action="/article/2/comment/{{ article.id }}" method="post">
+                    {% csrf_token %}
+                    <div class="col-sm-8">
+                        <textarea class="form-control" name="comment-content" id="comment-content" rows="3" style="resize: none;" required></textarea>
+                    </div>
+                    <div class="col-sm-1 col-sm-offset-9" style="margin-top: 15px;">
+                        <button type="submit" class="btn btn-primary btn-sm comment-publish">发表</button>
+                    </div>
+                </form>
+                {% else %}
+                <div class="col-sm-12 col-xs-12 text-center">
+                    <h2>请登录后发表评论</h2>
                 </div>
-                <div class="col-sm-1 col-sm-offset-9" style="margin-top: 15px; ">
-                    <button class="btn btn-primary btn-sm">发表</button>
-                </div>
+                {% endif %}
             </div>
         </div>
 
-
-
-        <div class="container-fluid hot-comment">
-            <div class="row">
-                <div class="col-sm-2 col-sm-offset-1">
-                    <h4><strong>热门评论</strong></h4>
-                </div>
-            </div>
-
-
-            <!--评论部分-->
-            <div class="container-fluid comment" id="201">
-                <div class="row">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2 comment">
-                        <p class="comment-content" style="line-height: 150%; ">
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 text-left">
-                        <small class ="comment-time">2020-10-20 10:25:20</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs comment-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs comment-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge down_count">2341</span></button>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-xs btn-primary" data-target="#comment_reply" data-toggle="modal">回复</button>
-                    </div>
-                </div>
-            </div>
-            <div class="container comment-reply-201">
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin: 10px 0;">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button class="btn btn-warning btn-xs">
-                        查看更多回复
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container-fluid comment" id="202">
-                <div class="row">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2 comment">
-                        <p class="comment-content" style="line-height: 150%; ">
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 text-left">
-                        <small class ="comment-time">2020-10-20 10:25:20</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs comment-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs comment-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge down_count">2341</span></button>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-xs btn-primary" data-target="#comment_reply" data-toggle="modal">回复</button>
-                    </div>
-                </div>
-            </div>
-            <div class="container comment-reply-202">
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin: 10px 0">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button class="btn btn-warning btn-xs">
-                        查看更多回复
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container-fluid comment" id="203">
-                <div class="row">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2 comment">
-                        <p class="comment-content" style="line-height: 150%; ">
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 text-left">
-                        <small class ="comment-time">2020-10-20 10:25:20</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs comment-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs comment-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge down_count">2341</span></button>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-xs btn-primary" data-target="#comment_reply" data-toggle="modal">回复</button>
-                    </div>
-                </div>
-            </div>
-            <div class="container comment-reply-203">
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin: 10px 0;">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button class="btn btn-warning btn-xs">
-                        查看更多回复
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!--热门评论分割线-->
         <div class="container-fluid">
             <div class="row" style="margin: 10px 0">
                 <div class="col-sm-9 col-sm-offset-1">
@@ -431,378 +115,31 @@
                 </div>
             </div>
         </div>
-
-
-
-        <div class="container-fluid other-comment">
-            <div class="row">
-                <div class="col-sm-2 col-sm-offset-1">
-                    <h4><strong>其他评论</strong></h4>
-                </div>
-            </div>
-
-<!--        其他评论-->
-            <div class="container-fluid">
+        <div class="container-fluid comment">
+            {% for comment in article_comment %}
+            <div class="col-sm-10 col-sm-offset-1">
                 <div class="row">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
+                    <div class="col-sm-4">
+                        <p><strong class="comment-publisher-name">{{ comment.publisher.name }}</strong></p>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-8 col-sm-offset-2 comment">
                         <p class="comment-content" style="line-height: 150%; ">
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
+                            {{ comment.comment_content }}
                         </p>
                     </div>
-                    <div class="col-sm-2 col-sm-offset-2 text-left">
-                        <small class ="comment-time">2020-10-20 10:25:20</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs comment-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs comment-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge down_count">2341</span></button>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-xs btn-primary" data-target="#comment_reply" data-toggle="modal">回复</button>
-                    </div>
                 </div>
-            </div>
-            <div class="container">
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
                 <div class="row">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2 comment">
-                        <p class="comment-content" style="line-height: 150%; ">
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                        </p>
-                    </div>
                     <div class="col-sm-2 col-sm-offset-2 text-left">
-                        <small class ="comment-time">2020-10-20 10:25:20</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs comment-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs comment-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge down_count">2341</span></button>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-xs btn-primary" data-target="#comment_reply" data-toggle="modal">回复</button>
+                        <small class ="comment-time">{{ comment.created_time }}</small>
                     </div>
                 </div>
             </div>
-            <div class="container">
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin: 10px 0;">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button class="btn btn-warning btn-xs">
-                        查看更多回复
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2 comment">
-                        <p class="comment-content" style="line-height: 150%; ">
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 text-left">
-                        <small class ="comment-time">2020-10-20 10:25:20</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs comment-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs comment-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge down_count">2341</span></button>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-xs btn-primary" data-target="#comment_reply" data-toggle="modal">回复</button>
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin: 10px 0;">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button class="btn btn-warning btn-xs">
-                        查看更多回复
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2 comment">
-                        <p class="comment-content" style="line-height: 150%; ">
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容 评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                            评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容评论内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 text-left">
-                        <small class ="comment-time">2020-10-20 10:25:20</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs comment-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs comment-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge down_count">2341</span></button>
-                    </div>
-                    <div class="col-sm-1">
-                        <button class="btn btn-xs btn-primary" data-target="#comment_reply" data-toggle="modal">回复</button>
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px; ">
-                    <a href="{% url 'userinfo' %}">
-                        <div class="col-sm-1 col-sm-offset-1 text-right" style="padding: 0; ">
-                            <img src="/static/avatar/领带.jpg" alt="用户头像" style="width: 30px; height: 30px; border-radius: 100%; ">
-                        </div>
-                        <div class="col-sm-4">
-                            <p><strong>用户名</strong></p>
-                        </div>
-                    </a>
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <p class="comment-reply" style="line-height: 150%; ">
-                            回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容回复内容
-                        </p>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-2 reply-time">
-                        <small>2020-12-25 20:21:54</small>
-                    </div>
-                    <div class="col-sm-2 col-sm-offset-1">
-                        <button class="btn btn-success btn-xs reply-up"> <span class="glyphicon glyphicon-thumbs-up"></span> 首肯心折！<span class="badge up_count">2657</span> </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn btn-danger btn-xs reply-down"> <span class="glyphicon glyphicon-thumbs-down"></span> 大谬不然！<span class="badge up_count">2657</span> </button>
-                    </div>
-                </div>
-                <div class="row" style="margin: 10px 0;">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button class="btn btn-warning btn-xs">
-                        查看更多回复
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="row" style="margin-top: 15px; ">
-                    <div class="col-sm-1 col-sm-offset-2">
-                        <button class="btn btn-info btn-sm">
-                             <span class="glyphicon glyphicon-th-list"></span> 查看更多评论
-                        </button>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-    <div class="modal fade" tabindex="-1" role="dialog" id="comment_reply">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">评论回复</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="reply-content"> <span class="glyphicon glyphicon-circle-arrow-right"></span> 评论发布者</label>
-                            <textarea class="form-control" rows="5" id="reply-content" style="resize: none;"></textarea>
-                        </div>
-                        <button class="btn btn-primary" style="width: 49.6%;">回复</button>
-                        <button class="btn btn-danger" style="width: 49.6%;">取消</button>
-                    </form>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
     <script src="/static/js/article_detail.js"></script>
+    <script src="/static/js/common.js"></script>
 </body>

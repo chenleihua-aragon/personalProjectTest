@@ -17,16 +17,14 @@
         </div>
         <div class="row">
             <div class="col-sm-4 col-sm-offset-4">
-                <form onsubmit="return false; " id="login-form">
+                <form action="{% url 'login' %}" method="post" id="login-form">
+                    {% csrf_token %}
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="userName">用户名：</label>
-                        <input type="text" class="form-control" name="username" id="userName" placeholder="请输入用户名">
+                        <input type="text" class="form-control" name="username" id="userName" placeholder="请输入用户名" value="{{ username }}">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label id="user-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400; display: none;">用户名不能为空！</label>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label id="user-space-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400; display: none;">用户名不能包含空格！</label>
+                        <label id="user-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400;">{{ username_error }}</label>
                     </div>
                     <div class="form-group" style="margin-bottom: 0; margin-top: 10px;">
                       <label for="password">密码：</label>
@@ -34,7 +32,10 @@
                     </div>
 
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label id="password-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400; display: none;">密码不能为空！</label>
+                        <label id="password-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400;">{{ password_error }}</label>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label id="account-info-error" style="padding: 0; margin-bottom: 0; color: red; font-size: 12px; font-weight: 400;">{{ account_error }}</label>
                     </div>
                     <div class="clearfix"></div>
                     <button type="submit" class="login btn btn-primary btn-block" style="margin-top: 20px;">登录</button>
